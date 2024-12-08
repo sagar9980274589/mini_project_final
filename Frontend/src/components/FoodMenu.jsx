@@ -75,7 +75,7 @@ const FoodMenu = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/menuItems?userEmail=${email}`
+          `https://mini-project-final-xi.vercel.app/api/menuItems?userEmail=${email}`
         );
         setFoodItems(response.data);
       } catch (error) {

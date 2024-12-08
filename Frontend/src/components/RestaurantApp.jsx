@@ -26,7 +26,7 @@ function RestaurantApp() {
         const decodedToken = jwtDecode(token);
         setUserEmail(decodedToken.email); // Store the email in state
 
-        const response = await axios.get(`http://localhost:5000/api/menuItems?userEmail=${decodedToken.email}`);
+        const response = await axios.get(`https://mini-project-final-xi.vercel.app/api/menuItems?userEmail=${decodedToken.email}`);
         setMenuItems(response.data);
       } catch (error) {
         setError("Error fetching menu items.");
@@ -64,7 +64,7 @@ function RestaurantApp() {
     try {
       const token = localStorage.getItem('token');
       const decodedToken = jwtDecode(token); 
-      const response = await axios.post('http://localhost:5000/api/menuItems', {
+      const response = await axios.post('https://mini-project-final-xi.vercel.app/api/menuItems', {
         ...newMenuItem,
         userEmail: decodedToken.email,
       });
@@ -81,7 +81,7 @@ function RestaurantApp() {
   const deleteMenuItem = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:5000/api/menuItems/${id}`);
+      await axios.delete(`https://mini-project-final-xi.vercel.app/api/menuItems/${id}`);
       setMenuItems((prev) => prev.filter(item => item._id !== id));
     } catch (error) {
       setError("Error deleting menu item. Please try again.");
