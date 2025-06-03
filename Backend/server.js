@@ -33,6 +33,9 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api', ordersRouter);
 app.use('/api', menuItemsRouter);
 
+app.get('/', (req, res) => {
+  res.send('✅ Backend is live!');
+});
 // User Registration
 app.post('/register', async (req, res) => {
   console.log('📥 Register request received:', req.body);
