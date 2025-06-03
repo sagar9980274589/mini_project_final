@@ -285,7 +285,7 @@ const DisplayMenu = () => {
                             <p>Serial Number: {order.serialNumber}</p>
                             <p>Status: {orderStatuses[order.orderId] || "We are preparing your order"}</p>
                             <button className="order-status-button" disabled={true}>
-                                Mark as Ready
+                              {orderStatuses[order.orderId] || "We are preparing your order"}
                             </button>
                         </div>
                     ))}
