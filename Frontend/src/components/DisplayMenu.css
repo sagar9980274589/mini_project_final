@@ -1,96 +1,88 @@
 .food-menu {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center align items */
-  width: 100%; /* Full width */
-  padding: 20px; /* Optional padding */
-  box-sizing: border-box; /* Include padding in width calculation */
-}
-.menu-item{
-GAP:1vw;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .menu-items,
 .order-summary,
 .ready-orders,
 .order-history {
-  width: 100%; /* Allow sections to take full width */
-  max-width: 600px; /* Optional max-width for readability */
-  margin: 10px 0; /* Margin for spacing between elements */
-  padding: 20px; /* Inner padding for content */
-  border: 1px solid #ccc; /* Optional border */
-  border-radius: 5px; /* Optional border radius */
-  background-color: #f9f9f9; /* Light background for contrast */
+  width: 100%;
+  max-width: 600px;
+  margin: 10px 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
-h2 {
-  margin-bottom: 10px; /* Add space below headings */
+.menu-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
-.divider {
-  width: 100%; /* Full width line */
-  border: 0; /* Remove default border */
-  border-top: 1px solid #ccc; /* Custom border */
-  margin: 20px 0; /* Space above and below the line */
+.menu-item {
+  flex: 1 1 250px;
+  max-width: 280px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.get-order,
-.clear-orders-button {
-  margin-top: 20px; /* Spacing above the buttons */
-  padding: 10px 20px; /* Button padding */
-  background-color: #007bff; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-}
-
-.get-order:hover,
-.clear-orders-button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+.menu-item img.food-image {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .quantity-controls {
   display: flex;
   align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
 }
 
-.quantity-controls button {
-  margin: 0 5px; /* Space between buttons */
-}
-
-.order-status-button {
-  background-color: red;
-  color: white;
-  padding: 10px 20px;
-  border: none;
+.quantity-controls button,
+.remove-button {
+  padding: 6px 12px;
+  font-size: 14px;
   border-radius: 5px;
+  border: none;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s;
 }
 
-.order-status-button:hover {
-  background-color: darkred; /* Darker shade on hover */
-}
-.payment-modal {
-  text-align: center;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+.remove-button {
+  background-color: #dc3545;
+  color: white;
 }
 
-.payment-details {
-  margin-top: 20px;
+.remove-button:hover {
+  background-color: #b02a37;
 }
 
-.payment-details p {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.payment-modal button {
+.get-order,
+.clear-orders-button,
+.payment-modal button,
+.order-status-button {
   margin-top: 20px;
   padding: 10px 20px;
   background-color: #007bff;
@@ -98,9 +90,97 @@ h2 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-.payment-modal button:hover {
+.get-order:hover,
+.clear-orders-button:hover,
+.payment-modal button:hover,
+.order-status-button:hover {
   background-color: #0056b3;
 }
 
+.order-status-button {
+  background-color: red;
+  font-weight: bold;
+}
+
+.order-status-button:hover {
+  background-color: darkred;
+}
+
+.payment-modal {
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.payment-details p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .menu-item {
+    flex: 1 1 45%;
+    max-width: 100%;
+  }
+
+  .quantity-controls button,
+  .remove-button {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .get-order,
+  .clear-orders-button,
+  .payment-modal button,
+  .order-status-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .food-menu {
+    padding: 10px;
+  }
+
+  .menu-items,
+  .order-summary,
+  .ready-orders,
+  .order-history {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .quantity-controls {
+    gap: 5px;
+  }
+
+  .quantity-controls button,
+  .remove-button {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .get-order,
+  .clear-orders-button,
+  .payment-modal button,
+  .order-status-button {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+}

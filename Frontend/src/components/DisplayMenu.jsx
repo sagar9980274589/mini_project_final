@@ -7,22 +7,20 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Modal from 'react-modal';
 import paymentSuccessGif from '../assets/sucess.webm'; // Import the GIF
-import paymentSuccessSound from '../assets/sucess.mp3'
+import paymentSuccessSound from '../assets/sucess.mp3';
 import { API_URL } from '../api';
-const DisplayMenu = () => {
 
-    useGSAP(
-        () => {
-            gsap.from('.menu-item', { 
-                scaleX: 0,
-                scaleY: 0,
-                delay: 0.2,
-                duration: 0.8,
-                opacity: 0,
-                scale: 0
-            });
-        }
-    );
+const DisplayMenu = () => {
+    useGSAP(() => {
+        gsap.from('.menu-item', {
+            scaleX: 0,
+            scaleY: 0,
+            delay: 0.2,
+            duration: 0.8,
+            opacity: 0,
+            scale: 0,
+        });
+    });
 
     const { userEmail } = useParams();
     const location = useLocation();
@@ -37,11 +35,10 @@ const DisplayMenu = () => {
     const [orderId, setOrderId] = useState(null);
     const [orderHistory, setOrderHistory] = useState([]);
     const [orderStatuses, setOrderStatuses] = useState({});
-    const [paymentModalOpen, setPaymentModalOpen] = useState(false); 
-    const [paymentSuccess, setPaymentSuccess] = useState(false); 
-    const [showMakePaymentButton, setShowMakePaymentButton] = useState(false); // New state for showing the make payment button
+    const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+    const [paymentSuccess, setPaymentSuccess] = useState(false);
+    const [showMakePaymentButton, setShowMakePaymentButton] = useState(false);
 
-    // Fetch menu items
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
@@ -67,18 +64,18 @@ const DisplayMenu = () => {
     };
 
     const increaseQuantity = (id) => {
-        setQuantities((prev) => ({ ...prev, [id]: prev[id] + 1 }));
+        setQuantities(prev => ({ ...prev, [id]: prev[id] + 1 }));
     };
 
     const decreaseQuantity = (id) => {
-        setQuantities((prev) => ({
+        setQuantities(prev => ({
             ...prev,
             [id]: Math.max(0, prev[id] - 1),
         }));
     };
 
     const removeItem = (id) => {
-        setQuantities((prev) => ({ ...prev, [id]: 0 }));
+        setQuantities(prev => ({ ...prev, [id]: 0 }));
     };
 
     const getOrder = async () => {
@@ -102,7 +99,7 @@ const DisplayMenu = () => {
                 await axios.post(`${API_URL}/api/orders`, payload);
                 setOrderId(uniqueOrderId);
                 setOrderSummary(order);
-                setOrderHistory((prev) => [
+                setOrderHistory(prev => [
                     ...prev,
                     { orderId: uniqueOrderId, serialNumber, items: order, status: "We are preparing your order" },
                 ]);
@@ -111,12 +108,10 @@ const DisplayMenu = () => {
                     resetQuantities[item._id] = 0;
                 });
                 setQuantities(resetQuantities);
-                // Immediately fetch order history after placing the order
                 fetchOrderHistory();
 
-                // Show payment modal and Make Payment button after placing the order
                 setPaymentModalOpen(true);
-                setShowMakePaymentButton(true); // Show the make payment button
+                setShowMakePaymentButton(true);
             } catch (error) {
                 console.error('Error saving order:', error);
                 setError('Error saving order.');
@@ -143,10 +138,10 @@ const DisplayMenu = () => {
     const fetchOrderStatus = async (orderId) => {
         try {
             const response = await axios.get(`${API_URL}/api/orders/${orderId}`);
-            return response.data; 
+            return response.data;
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                return null; 
+                return null;
             } else {
                 console.error('Error fetching order status:', error.response ? error.response.data : error.message);
                 return null;
@@ -164,7 +159,7 @@ const DisplayMenu = () => {
                 }
                 setOrderStatuses(newOrderStatuses);
             }
-        }, 10000); 
+        }, 10000);
         return () => clearInterval(intervalId);
     }, [orderHistory]);
 
@@ -177,19 +172,17 @@ const DisplayMenu = () => {
 
     const filteredReadyOrders = readyOrders.filter(order => order.serialNumber === serialNumber);
 
-    // Close the payment modal
     const closePaymentModal = () => {
         setPaymentModalOpen(false);
-        setPaymentSuccess(false); 
-        setShowMakePaymentButton(false); // Hide the make payment button
+        setPaymentSuccess(false);
+        setShowMakePaymentButton(false);
     };
 
-    // Handle the payment simulation
     const handlePayment = () => {
-        setShowMakePaymentButton(false); // Hide the make payment button
+        setShowMakePaymentButton(false);
         setTimeout(() => {
-            setPaymentSuccess(true); // Show payment success message
-        }, 3000); 
+            setPaymentSuccess(true);
+        }, 3000);
     };
 
     return (
@@ -216,7 +209,6 @@ const DisplayMenu = () => {
             )}
             <button onClick={getOrder} className="get-order">Get Order</button>
 
-            {/* Payment Modal */}
             <Modal isOpen={paymentModalOpen} onRequestClose={closePaymentModal} contentLabel="Payment Modal" ariaHideApp={false}>
                 <div className="payment-modal">
                     <h2>Google Pay</h2>
@@ -267,15 +259,19 @@ const DisplayMenu = () => {
                 </div>
             )}
 
-            <hr className="divider" />
             {filteredReadyOrders.length > 0 && (
                 <div className="ready-orders">
                     <h2>Ready Orders</h2>
-                    <ul>
-                        {filteredReadyOrders.map((order, index) => (
-                            <li key={index}>Order {order.orderId} is ready!</li>
-                        ))}
-                    </ul>
+                    {filteredReadyOrders.map((order, index) => (
+                        <div key={index} className="ready-order">
+                            <p><strong>Order ID: {order.orderId}</strong></p>
+                            <p>Serial Number: {order.serialNumber}</p>
+                            <p>Status: {orderStatuses[order.orderId] || "We are preparing your order"}</p>
+                            <button className="order-status-button" disabled={true}>
+                                Mark as Ready
+                            </button>
+                        </div>
+                    ))}
                     <button onClick={handleClearOrders} className="clear-orders-button">Clear Ready Orders</button>
                 </div>
             )}
@@ -283,28 +279,19 @@ const DisplayMenu = () => {
             {orderHistory.length > 0 && (
                 <div className="order-history">
                     <h2>Order History</h2>
-                    <ul>
-                        {orderHistory.map((order, index) => (
-                            <li key={index}>
-                                <strong>Order ID: {order.orderId}</strong> - Serial Number: {order.serialNumber}
-                                <ul>
-                                    {order.items.map((item, idx) => (
-                                        <li key={idx}>
-                                            {item.name} (x{item.quantity}) - ₹{item.price.toFixed(2)} each
-                                        </li>
-                                    ))}
-                                </ul>
-                                <p><strong>Total: ₹{order.items.reduce((acc, item) => acc + item.total, 0).toFixed(2)}</strong></p>
-                                <button className="order-status-button">
-                                    {orderStatuses[order.orderId] || "We are preparing your order"}
-                                </button>
-                                <hr />
-                            </li>
-                        ))}
-                    </ul>
+                    {orderHistory.map((order, index) => (
+                        <div key={index} className="history-order">
+                            <p><strong>Order ID: {order.orderId}</strong></p>
+                            <p>Serial Number: {order.serialNumber}</p>
+                            <p>Status: {orderStatuses[order.orderId] || "We are preparing your order"}</p>
+                            <button className="order-status-button" disabled={true}>
+                                Mark as Ready
+                            </button>
+                        </div>
+                    ))}
+                    <button onClick={handleClearOrderHistory} className="clear-orders-button">Clear Order History</button>
                 </div>
             )}
-            <button onClick={handleClearOrderHistory} className="clear-order-history-button">Clear Order History</button>
         </div>
     );
 };
