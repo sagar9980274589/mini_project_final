@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:5000'; // Adjust this if your backend is hoste
 // Function to register a user
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, userData);
+    const response = await axios.post(`http://localhost:5000/register`, userData);
     return response.data; // Return the response data, typically success message
   } catch (error) {
     // Handle error and provide meaningful feedback

@@ -13,14 +13,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 // Middleware
-app.use(cors(
-  {
-    origin:["https://mini-project-final-n5wv-frontend.vercel.app"],
-    methods:["POST","GET"],
-    credentials:true
-  }
-));
+// app.use(cors(
+//   {
+//     origin:["http://localhost:5000"],
+//     methods:["POST","GET"],
+//     credentials:true
+//   }
+// ));
 app.use(express.json());
 app.use('/api', ordersRouter);
 
