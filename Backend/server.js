@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // Enable CORS for local frontend
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://mini-project-final-2-m8e7.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
