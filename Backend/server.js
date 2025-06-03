@@ -4,43 +4,39 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const User = require('./models/User'); // Ensure this path is correct
-const menuItemsRouter = require('./routes/menuItems'); // Import the menu items router
+const path = require('path');
+
+const User = require('./models/User'); // Make sure this path is correct
+const menuItemsRouter = require('./routes/menuItems');
 const ordersRouter = require('./routes/orders');
-const path=require('path');
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
+// Enable CORS for local frontend
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
-// Middleware
-// app.use(cors(
-//   {
-//     origin:["http://localhost:5000"],
-//     methods:["POST","GET"],
-//     credentials:true
-//   }
-// ));
-app.use(express.json());
-app.use('/api', ordersRouter);
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+app.use(express.json());
+
+// Connect to MongoDB (removed deprecated options)
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// Routes
+app.use('/api', ordersRouter);
+app.use('/api', menuItemsRouter);
 
 // User Registration
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
-  
-  // Input validation
+
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -82,34 +78,32 @@ app.post('/login', async (req, res) => {
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+  // Authorization header expected as: "Bearer <token>"
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(403).send("Access denied.");
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).send("Invalid token.");
-    req.user = user; // Save user info for later use
+    req.user = user;
     next();
   });
 };
 
-// Use menu items router
-app.use('/api', menuItemsRouter);
-
-// Logout User
+// Logout endpoint (for frontend use, usually token is just discarded client-side)
 app.post('/logout', (req, res) => {
   res.json({ message: 'User logged out' });
 });
-//deployment 
-// if(process.env.NODE_ENV==='production')
-// {
-//   const dirPath=path.resolve();
-//   app.use(express.static("Frontend/dist"));
-//   app.get('*',(req,res)=>{
-//       res.sendFile(path.resolve(dirPath,"dist","index.html"))
+
+// Deployment static files serving (uncomment and adjust when deploying)
+// if (process.env.NODE_ENV === 'production') {
+//   const dirPath = path.resolve();
+//   app.use(express.static(path.join(dirPath, 'Frontend', 'dist')));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(dirPath, 'Frontend', 'dist', 'index.html'));
 //   });
 // }
 
-// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

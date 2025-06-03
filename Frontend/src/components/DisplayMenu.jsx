@@ -8,7 +8,7 @@ import { useGSAP } from '@gsap/react';
 import Modal from 'react-modal';
 import paymentSuccessGif from '../assets/sucess.webm'; // Import the GIF
 import paymentSuccessSound from '../assets/sucess.mp3'
-
+import { API_URL } from '../api';
 const DisplayMenu = () => {
 
     useGSAP(
@@ -45,7 +45,7 @@ const DisplayMenu = () => {
     useEffect(() => {
         const fetchMenuItems = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/menuItems?userEmail=${userEmail}`);
+                const response = await axios.get(`${API_URL}/api/menuItems?userEmail=${userEmail}`);
                 setMenuItems(response.data);
                 const initialQuantities = {};
                 response.data.forEach(item => {
@@ -99,7 +99,7 @@ const DisplayMenu = () => {
                 serialNumber,
             };
             try {
-                await axios.post('http://localhost:5000/api/orders', payload);
+                await axios.post(`${API_URL}/api/orders`, payload);
                 setOrderId(uniqueOrderId);
                 setOrderSummary(order);
                 setOrderHistory((prev) => [
@@ -133,7 +133,7 @@ const DisplayMenu = () => {
 
     const fetchOrderHistory = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/orders/history?userEmail=${userEmail}`);
+            const response = await axios.get(`${API_URL}/api/orders/history?userEmail=${userEmail}`);
             setOrderHistory(response.data);
         } catch (error) {
             console.error('Error fetching order history:', error.response ? error.response.data : error.message);
@@ -142,7 +142,7 @@ const DisplayMenu = () => {
 
     const fetchOrderStatus = async (orderId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/orders/${orderId}`);
+            const response = await axios.get(`${API_URL}/api/orders/${orderId}`);
             return response.data; 
         } catch (error) {
             if (error.response && error.response.status === 404) {

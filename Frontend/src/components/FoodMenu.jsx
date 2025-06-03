@@ -10,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import { useParams } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import './QRCodeGenerator.css';
+import { API_URL } from "../api";
 
 const FoodMenu = () => {
   const container=useRef();
@@ -75,7 +76,7 @@ const FoodMenu = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/menuItems?userEmail=${email}`
+          `${API_URL}/api/menuItems?userEmail=${email}`
         );
         setFoodItems(response.data);
       } catch (error) {
