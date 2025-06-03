@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_URL = 'https://mini-project-final-1-jrh3.onrender.com:10000'; // Adjust this if your backend is hosted elsewhere
+export const API_URL = 'https://mini-project-final-1-jrh3.onrender.com'; // Adjust this if your backend is hosted elsewhere
 
 // Function to register a user
 export const registerUser = async (userData) => {
